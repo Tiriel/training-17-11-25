@@ -8,4 +8,5 @@
 * `symfony console doctrine:database:create` to initialize the database
 * `symfony console doctrine:migrations:migrate -n` to set up the base schema
 * `symfony console doctrine:fixtures:load -n` to load initial data
+* `symfony console importmap:install` to install web assets
 * `symfony serve` (on mac and linux, add  `-d` for daemon mode) then browse the application
