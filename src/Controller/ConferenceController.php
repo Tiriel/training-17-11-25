@@ -18,6 +18,7 @@ use App\Security\Voter\EditionVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\HandleTrait;
@@ -70,6 +71,7 @@ class ConferenceController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_VOLUNTEER')]
     #[Route('/conference', name: 'app_conference_list', methods: ['GET'])]
     public function list(Request $request, DatabaseConferenceSearch $search): Response
     {

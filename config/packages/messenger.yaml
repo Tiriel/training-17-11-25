@@ -8,12 +8,23 @@ framework:
                     use_notify: true
                     check_delayed_interval: 60000
                 retry_strategy:
-                    max_retries: 3
-                    multiplier: 2
+                    delay: 1000
+                    max_retries: 4
+                    multiplier: 3
             failed: 'doctrine://messenger?queue_name=failed'
             sync: 'sync://'
-            high_priority: 'doctrine://messenger?queue_name=high_priority'
-            low_priority: 'doctrine://messenger?queue_name=low_priority'
+            high_priority:
+                dsn: 'doctrine://messenger?queue_name=high_priority'
+                retry_strategy:
+                    delay: 1000
+                    max_retries: 4
+                    multiplier: 3
+            low_priority:
+                dsn: 'doctrine://messenger?queue_name=low_priority'
+                retry_strategy:
+                    delay: 2000
+                    max_retries: 4
+                    multiplier: 3
 
         failure_transport: failed
 
@@ -22,6 +33,7 @@ framework:
         buses:
             messenger.bus.default:
                 middleware:
+                    - 'App\Messenger\Middleware\PriorityMiddleware'
                     - 'App\Messenger\Middleware\LoggingMiddleware'
 
         routing:
