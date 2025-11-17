@@ -8,16 +8,16 @@ use App\Entity\Conference;
 use App\Entity\User;
 use App\Form\ConferenceType;
 use App\Matching\Matcher;
-use App\Matching\Strategy\TagBasedStrategy;
-use App\Message\GetSingleConferenceQuery;
-use App\Message\MatchVolunteerMessage;
+use App\Messenger\Enum\PriorityEnum;
+use App\Messenger\Message\GetSingleConferenceQuery;
+use App\Messenger\Message\MatchVolunteerMessage;
+use App\Messenger\Stamp\PriorityStamp;
 use App\Search\ConferenceSearchInterface;
 use App\Search\DatabaseConferenceSearch;
 use App\Security\Voter\EditionVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\HandleTrait;
@@ -98,7 +98,7 @@ class ConferenceController extends AbstractController
     #[Route('/conferences/match/{strategy}', name: 'app_conference_match', requirements: ['strategy' => 'tag|skill|location'])]
     public function match(string $strategy, #[CurrentUser] User $user, Matcher $matcher, MessageBusInterface $bus): Response
     {
-        $bus->dispatch(new MatchVolunteerMessage($user->getId()));
+        $bus->dispatch(new MatchVolunteerMessage($user->getId()), [new PriorityStamp(PriorityEnum::Low)]);
 
         return $this->render('conference/list.html.twig', [
             'conferences' => $matcher->match($user, $strategy),

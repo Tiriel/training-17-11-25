@@ -1,9 +1,9 @@
 <?php
 
-namespace App\MessageHandler;
+namespace App\Messenger\MessageHandler;
 
 use App\Matching\Matcher;
-use App\Message\MatchVolunteerMessage;
+use App\Messenger\Message\MatchVolunteerMessage;
 use App\Repository\UserRepository;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 

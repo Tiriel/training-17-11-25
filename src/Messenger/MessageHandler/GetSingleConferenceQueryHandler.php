@@ -1,9 +1,9 @@
 <?php
 
-namespace App\MessageHandler;
+namespace App\Messenger\MessageHandler;
 
 use App\Entity\Conference;
-use App\Message\GetSingleConferenceQuery;
+use App\Messenger\Message\GetSingleConferenceQuery;
 use App\Repository\ConferenceRepository;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 

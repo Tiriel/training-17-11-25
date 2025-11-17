@@ -1,8 +1,8 @@
 <?php
 
-namespace App\MessageHandler;
+namespace App\Messenger\MessageHandler;
 
-use App\Message\SendEmailMessage;
+use App\Messenger\Message\SendEmailMessage;
 use App\Repository\UserRepository;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;

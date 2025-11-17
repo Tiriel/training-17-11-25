@@ -12,20 +12,24 @@ framework:
                     multiplier: 2
             failed: 'doctrine://messenger?queue_name=failed'
             sync: 'sync://'
+            high_priority: 'doctrine://messenger?queue_name=high_priority'
+            low_priority: 'doctrine://messenger?queue_name=low_priority'
 
         failure_transport: failed
 
         default_bus: messenger.bus.default
 
         buses:
-            messenger.bus.default: []
+            messenger.bus.default:
+                middleware:
+                    - 'App\Messenger\Middleware\LoggingMiddleware'
 
         routing:
             Symfony\Component\Mailer\Messenger\SendEmailMessage: async
             Symfony\Component\Notifier\Message\ChatMessage: async
             Symfony\Component\Notifier\Message\SmsMessage: async
-            App\Message\GetSingleConferenceQuery: sync
-            App\Message\MatchVolunteerMessage: async
+            App\Messenger\Message\GetSingleConferenceQuery: sync
+            App\Messenger\Message\MatchVolunteerMessage: async
 
             # Route your messages to the transports
             # 'App\Message\YourMessage': async
