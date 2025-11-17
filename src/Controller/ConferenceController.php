@@ -7,7 +7,9 @@ namespace App\Controller;
 use App\Entity\Conference;
 use App\Entity\User;
 use App\Form\ConferenceType;
+use App\Matching\Matcher;
 use App\Matching\Strategy\TagBasedStrategy;
+use App\Message\GetSingleConferenceQuery;
 use App\Message\MatchVolunteerMessage;
 use App\Search\ConferenceSearchInterface;
 use App\Search\DatabaseConferenceSearch;
@@ -18,12 +20,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\HandleTrait;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ConferenceController extends AbstractController
 {
+    use HandleTrait;
+
+    public function __construct(MessageBusInterface $messageBus)
+    {
+        $this->messageBus = $messageBus;
+    }
+
     // Possible solution to SF_ADVANCED exercise 14
     //#[IsGranted(new Expression('is_granted("ROLE_ORGANIZER") or is_granted("ROLE_WEBSITE")'))]
     #[Route('/conference/new', name: 'app_conference_new', methods: ['GET', 'POST'])]
@@ -75,18 +86,22 @@ class ConferenceController extends AbstractController
     }
 
     #[Route('/conference/{id}', name: 'app_conference_show', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function show(Conference $conference): Response
+    public function show(int $id): Response
     {
+        $conference = $this->handle(new GetSingleConferenceQuery($id));
+
         return $this->render('conference/show.html.twig', [
             'conference' => $conference,
         ]);
     }
 
     #[Route('/conferences/match/{strategy}', name: 'app_conference_match', requirements: ['strategy' => 'tag|skill|location'])]
-    public function match(string $strategy, #[CurrentUser] User $user, TagBasedStrategy $tagStrategy): Response
+    public function match(string $strategy, #[CurrentUser] User $user, Matcher $matcher, MessageBusInterface $bus): Response
     {
+        $bus->dispatch(new MatchVolunteerMessage($user->getId()));
+
         return $this->render('conference/list.html.twig', [
-            'conferences' => $tagStrategy->match($user),
+            'conferences' => $matcher->match($user, $strategy),
         ]);
     }
 }
