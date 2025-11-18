@@ -11,7 +11,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class VolunteeringController extends AbstractController
 {
-    #[IsGranted('IS_AUTHENTICATED')]
+    //#[IsGranted('IS_AUTHENTICATED')]
     #[Route('/api/volunteering', name: 'app_api_get_volunteering', methods: ['GET'])]
     public function getVolunteering(Request $request, VolunteeringRepository $repository): Response
     {

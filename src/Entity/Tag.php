@@ -4,9 +4,11 @@ namespace App\Entity;
 
 use App\Repository\TagRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
+#[Groups(['profile:read'])]
 #[ORM\Entity(repositoryClass: TagRepository::class)]
-class Tag
+class Tag implements EntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

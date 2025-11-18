@@ -9,16 +9,15 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 
+#[Groups('Volunteering')]
 #[ORM\Entity(repositoryClass: OrganizationRepository::class)]
-class Organization
+class Organization implements EntityInterface
 {
-    #[Groups('Volunteering')]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups('Volunteering')]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 

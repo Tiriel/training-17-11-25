@@ -6,17 +6,18 @@ use App\Repository\VolunteerProfileRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\Ignore;
 
+#[Groups(['Volunteering', 'profile:read'])]
 #[ORM\Entity(repositoryClass: VolunteerProfileRepository::class)]
-class VolunteerProfile
+class VolunteerProfile implements EntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Ignore]
     #[ORM\OneToOne(inversedBy: 'volunteerProfile', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $forUser = null;

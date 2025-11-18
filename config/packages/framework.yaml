@@ -16,6 +16,9 @@ framework:
 
     #esi: true
     #fragments: true
+    serializer:
+        name_converter: 'App\Serializer\NameConverter\AppNameConverter'
+        circular_reference_handler: 'App\Serializer\Handler\CircularReferenceHandler'
 
 when@test:
     framework:

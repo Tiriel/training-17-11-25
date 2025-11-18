@@ -15,15 +15,15 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityInterface
 {
-    #[Groups('Volunteering')]
+    #[Groups(['Volunteering', 'profile:read'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups('Volunteering')]
+    #[Groups(['Volunteering', 'profile:read'])]
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 

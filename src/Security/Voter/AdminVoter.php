@@ -19,6 +19,10 @@ class AdminVoter implements VoterInterface
     {
         $user = $token->getUser();
 
+        if (null === $user) {
+            return self::ACCESS_DENIED;
+        }
+
         if (\in_array('ROLE_WEBSITE', $this->hierarchy->getReachableRoleNames($user->getRoles()), true)) {
             return self::ACCESS_GRANTED;
         }

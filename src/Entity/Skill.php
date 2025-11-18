@@ -4,9 +4,11 @@ namespace App\Entity;
 
 use App\Repository\SkillRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
+#[Groups(['profile:read'])]
 #[ORM\Entity(repositoryClass: SkillRepository::class)]
-class Skill
+class Skill implements EntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

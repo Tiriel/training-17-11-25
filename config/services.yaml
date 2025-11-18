@@ -24,6 +24,10 @@ services:
 #        autoconfigure: false
 #        tags:
 #            - { name: security.voter, priority: 300 }
+
+    App\Serializer\Handler\CircularReferenceHandler:
+        autowire: false
+        class: 'App\Serializer\Handler\CircularReferenceHandler'
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 

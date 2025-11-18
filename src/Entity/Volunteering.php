@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[Groups(['Volunteering'])]
 #[ORM\Entity(repositoryClass: VolunteeringRepository::class)]
-class Volunteering
+class Volunteering implements EntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
