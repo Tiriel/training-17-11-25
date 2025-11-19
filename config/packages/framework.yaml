@@ -13,7 +13,12 @@ framework:
                 headers:
                     Accept: 'application/json'
                     apikey: '%env(CONF_API_KEY)%'
-
+            external.client:
+                base_uri: 'https://google.com'
+                retry_failed:
+                    max_retries: 3
+                extra:
+                    default_ttl: 60
     #esi: true
     #fragments: true
     serializer:

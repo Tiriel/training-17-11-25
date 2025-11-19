@@ -6,12 +6,14 @@ use App\Repository\VolunteeringRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class VolunteeringController extends AbstractController
 {
     //#[IsGranted('IS_AUTHENTICATED')]
+    #[Cache(maxage: 1800, public: true)]
     #[Route('/api/volunteering', name: 'app_api_get_volunteering', methods: ['GET'])]
     public function getVolunteering(Request $request, VolunteeringRepository $repository): Response
     {

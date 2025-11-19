@@ -26,6 +26,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class ConferenceController extends AbstractController
 {
@@ -85,16 +86,6 @@ class ConferenceController extends AbstractController
     public function search(Request $request, ConferenceSearchInterface $search): array
     {
         return ['conferences' => $search->search($request->query->get('name'))];
-    }
-
-    #[Route('/conference/{id}', name: 'app_conference_show', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function show(int $id): Response
-    {
-        $conference = $this->handle(new GetSingleConferenceQuery($id));
-
-        return $this->render('conference/show.html.twig', [
-            'conference' => $conference,
-        ]);
     }
 
     #[Route('/conferences/match/{strategy}', name: 'app_conference_match', requirements: ['strategy' => 'tag|skill|location'])]
