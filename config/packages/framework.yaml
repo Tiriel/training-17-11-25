@@ -21,6 +21,8 @@ framework:
                     default_ttl: 60
     #esi: true
     #fragments: true
+    http_cache:
+        enabled: true
     serializer:
         name_converter: 'App\Serializer\NameConverter\AppNameConverter'
         circular_reference_handler: 'App\Serializer\Handler\CircularReferenceHandler'

@@ -3,29 +3,37 @@
 namespace App\Matching;
 
 use App\Entity\User;
-use App\Matching\Strategy\LocationBasedStrategy;
 use App\Matching\Strategy\MatchingStrategyInterface;
-use App\Matching\Strategy\SkillBasedStrategy;
-use App\Matching\Strategy\TagBasedStrategy;
+use Symfony\Component\Cache\CacheItem;
+use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 class Matcher implements MatchingStrategyInterface
 {
     public function __construct(
-        private readonly TagBasedStrategy $tagBasedStrategy,
-        private readonly SkillBasedStrategy $skillBasedStrategy,
-        private readonly LocationBasedStrategy $locationBasedStrategy
+        /** @var ContainerInterface<string, MatchingStrategyInterface> $strategies */
+        #[AutowireLocator('app.matching_strategies', defaultIndexMethod: 'getName')]
+        private ContainerInterface $strategies,
+        private readonly TagAwareCacheInterface $cache,
+        private readonly SluggerInterface $slugger,
     ) {}
 
     public function match(User $user, ?string $strategy = null): iterable
     {
-        $strategy = match ($strategy) {
-            'tag' => $this->tagBasedStrategy,
-            'skill' => $this->skillBasedStrategy,
-            'location' => $this->locationBasedStrategy,
-            default => throw new \InvalidArgumentException(),
-        };
+        return $this->cache->get(
+            $this->slugger->slug($user->getUserIdentifier()),
+            function (CacheItem $item) use ($user, $strategy) {
+                $result = $this->strategies->get($strategy)->match($user, $item);
+                $item
+                    ->set($result)
+                    ->tag(['matchings'])
+                    ->expiresAfter(84600);
 
-        return $strategy->match($user);
+                return $item->get();
+            }
+        );
     }
 
     public static function getName(): string

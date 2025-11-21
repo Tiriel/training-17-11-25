@@ -45,7 +45,7 @@ class Volunteering implements EntityInterface
         return $this->startAt;
     }
 
-    public function setStartAt(\DateTimeImmutable $startAt): static
+    public function setStartAt(?\DateTimeImmutable $startAt): static
     {
         $this->startAt = $startAt;
 
@@ -57,7 +57,7 @@ class Volunteering implements EntityInterface
         return $this->endAt;
     }
 
-    public function setEndAt(\DateTimeImmutable $endAt): static
+    public function setEndAt(?\DateTimeImmutable $endAt): static
     {
         $this->endAt = $endAt;
 

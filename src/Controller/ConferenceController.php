@@ -52,9 +52,14 @@ class ConferenceController extends AbstractController
         }
 
         $conference ??= new Conference();
+        // PRE_SET_DATA
         $form = $this->createForm(ConferenceType::class, $conference);
+        // POST_SET_DATA
 
-        $form->handleRequest($request);
+        // PRE_SUBMIT
+        $form->handleRequest($request); // SUBMIT
+        // POST_SUBMIT
+
         if ($form->isSubmitted() && $form->isValid()) {
             if (!$conference->getId()) {
                 $conference->setCreatedBy($this->getUser());

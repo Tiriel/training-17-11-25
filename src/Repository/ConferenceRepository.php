@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Conference;
+use App\Entity\Organization;
 use App\Entity\Skill;
 use App\Entity\Tag;
 use App\Entity\User;
@@ -43,13 +44,20 @@ class ConferenceRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findLikeName(string $name): array
+    public function findLikeName(string $name, int $limit, ?Organization $organization = null): array
     {
         $qb = $this->createQueryBuilder('c');
+
+        if ($organization instanceof Organization && is_int($organization->getId())) {
+            $qb
+                ->andWhere('c.organization = :organization')
+                ->setParameter('organization', $organization);
+        }
 
         return $qb
             ->where($qb->expr()->like('c.name', ':name'))
             ->setParameter('name', '%'.$name.'%')
+            ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
     }

@@ -10,4 +10,45 @@
 
         {{ include('includes/_form.html.twig', {button_label: 'Save'}) }}
     </section>
+    <script>
+        const form = document.getElementById('{{ form.vars.id }}');
+        const form_select_conference = document.getElementById('volunteering_conference');
+        const form_start_at = document.getElementById('volunteering_startAt');
+        const form_end_at = document.getElementById('volunteering_endAt');
+
+        const updateForm = async (data, url, method) => {
+            const req = await fetch(url, {
+                method: method,
+                body: data,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'charset': 'utf-8'
+                }
+            });
+
+            const text = await req.text();
+
+            return text;
+        };
+
+        const parseTextToHtml = (text) => {
+            const parser = new DOMParser();
+            const html = parser.parseFromString(text, 'text/html');
+
+            return html;
+        };
+
+        const changeOptions = async (e) => {
+            const requestBody = e.target.getAttribute('name') + '=' + e.target.value;
+            const updateFormResponse = await updateForm(requestBody, form.getAttribute('action'), form.getAttribute('method'));
+            const html = parseTextToHtml(updateFormResponse);
+
+            const new_form_start_at = html.getElementById('meetup_startAt');
+            form_start_at.innerHTML = new_form_start_at.innerHTML;
+            const new_form_end_at = html.getElementById('meetup_endAt');
+            form_start_at.innerHTML = new_form_end_at.innerHTML;
+        };
+
+        form_select_conference.addEventListener('change', (e) => changeOptions(e));
+    </script>
 {% endblock %}

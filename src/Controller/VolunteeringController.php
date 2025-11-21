@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class VolunteeringController extends AbstractController
 {
@@ -21,11 +22,12 @@ final class VolunteeringController extends AbstractController
         ]);
     }
 
+    #[IsGranted('IS_AUTHENTICATED')]
     #[Route('/volunteering/new', name: 'app_volunteering_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $manager): Response
     {
         $volunteering = (new Volunteering())->setForUser($this->getUser());
-        $options = [];
+        $options = ['action' => $this->generateUrl('app_volunteering_new')];
 
         if ($request->query->get('conference')) {
             $conference = $manager->getRepository(Conference::class)->find($request->get('conference'));
@@ -37,6 +39,7 @@ final class VolunteeringController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $volunteering->setForUser($this->getUser());
             $manager->persist($volunteering);
             $manager->flush();
 

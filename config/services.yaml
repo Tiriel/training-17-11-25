@@ -4,12 +4,15 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    app.pagination_limit: 20
 
 services:
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            int $limit: '%app.pagination_limit%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -28,6 +31,22 @@ services:
     App\Serializer\Handler\CircularReferenceHandler:
         autowire: false
         class: 'App\Serializer\Handler\CircularReferenceHandler'
+
+    App\Search\ConferenceSearchInterface:
+        factory: ['@App\Search\ConferenceSearchInterfaceFactory', 'create']
+        arguments:
+            $defaultSearch: '%env(DEFAULT_SEARCH)%'
+
+    App\Matching\Strategy\AbstractMatchingStrategy:
+        abstract: true
+        arguments:
+            $repository: '@App\Repository\ConferenceRepository'
+    App\Matching\Strategy\TagBasedStrategy:
+        parent: 'App\Matching\Strategy\AbstractMatchingStrategy'
+    App\Matching\Strategy\SkillBasedStrategy:
+        parent: 'App\Matching\Strategy\AbstractMatchingStrategy'
+    App\Matching\Strategy\LocationBasedStrategy:
+        parent: 'App\Matching\Strategy\AbstractMatchingStrategy'
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
