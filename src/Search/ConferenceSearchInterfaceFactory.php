@@ -9,7 +9,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class ConferenceSearchInterfaceFactory
 {
     public function __construct(
-        #[Lazy]
         private readonly HttpClientInterface $conferencesClient,
         #[Lazy]
         private readonly DatabaseConferenceSearch $databaseConferenceSearch,

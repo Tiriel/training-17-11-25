@@ -37,16 +37,16 @@ services:
         arguments:
             $defaultSearch: '%env(DEFAULT_SEARCH)%'
 
-    App\Matching\Strategy\AbstractMatchingStrategy:
-        abstract: true
-        arguments:
-            $repository: '@App\Repository\ConferenceRepository'
-    App\Matching\Strategy\TagBasedStrategy:
-        parent: 'App\Matching\Strategy\AbstractMatchingStrategy'
-    App\Matching\Strategy\SkillBasedStrategy:
-        parent: 'App\Matching\Strategy\AbstractMatchingStrategy'
-    App\Matching\Strategy\LocationBasedStrategy:
-        parent: 'App\Matching\Strategy\AbstractMatchingStrategy'
+#    App\Matching\Strategy\AbstractMatchingStrategy:
+#        abstract: true
+#        arguments:
+#            $repository: '@App\Repository\ConferenceRepository'
+#    App\Matching\Strategy\TagBasedStrategy:
+#        parent: 'App\Matching\Strategy\AbstractMatchingStrategy'
+#    App\Matching\Strategy\SkillBasedStrategy:
+#        parent: 'App\Matching\Strategy\AbstractMatchingStrategy'
+#    App\Matching\Strategy\LocationBasedStrategy:
+#        parent: 'App\Matching\Strategy\AbstractMatchingStrategy'
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 

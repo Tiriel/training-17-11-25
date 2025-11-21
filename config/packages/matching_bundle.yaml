@@ -1,0 +1,3 @@
+matching:
+    strategy_namespace: App\Matching\Strategy
+    user_repository: App\Repository\UserRepository

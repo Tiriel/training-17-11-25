@@ -7,10 +7,7 @@ namespace App\Controller;
 use App\Entity\Conference;
 use App\Entity\User;
 use App\Form\ConferenceType;
-use App\Matching\Matcher;
 use App\Messenger\Enum\PriorityEnum;
-use App\Messenger\Message\GetSingleConferenceQuery;
-use App\Messenger\Message\MatchVolunteerMessage;
 use App\Messenger\Stamp\PriorityStamp;
 use App\Search\ConferenceSearchInterface;
 use App\Search\DatabaseConferenceSearch;
@@ -26,7 +23,8 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Serializer\SerializerInterface;
+use Tiriel\MatchingBundle\Matching\MatchingHandler;
+use Tiriel\MatchingBundle\Messenger\Message\MatchVolunteerMessage;
 
 class ConferenceController extends AbstractController
 {
@@ -94,7 +92,7 @@ class ConferenceController extends AbstractController
     }
 
     #[Route('/conferences/match/{strategy}', name: 'app_conference_match', requirements: ['strategy' => 'tag|skill|location'])]
-    public function match(string $strategy, #[CurrentUser] User $user, Matcher $matcher, MessageBusInterface $bus): Response
+    public function match(string $strategy, #[CurrentUser] User $user, MatchingHandler $matcher, MessageBusInterface $bus): Response
     {
         $bus->dispatch(new MatchVolunteerMessage($user->getId()), [new PriorityStamp(PriorityEnum::Low)]);
 
